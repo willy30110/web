@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>洗衣系統</title>
+    <style type="text/css">
+        @media screen {
+            body {
+                background-color: whitesmoke;
+            }
+
+
+            h2 {
+                font-family: verdana, helvetica, sans-serif;
+                font-size: 20ex;
+            }
+        }
+        a div
+		{
+			border: 2px solid rgb(216, 216, 216);
+			padding: 5px 50px;
+			background: rgb(0, 0, 0);
+			width: 50px;
+			text-align: center;
+			border-radius: 50px;
+			color :rgb(255, 255, 255);
+            font-size: 3ex;
+		}
+		a:hover div
+		{
+		box-shadow: 2px 2px 3px rgb(216, 216, 216);
+		}
+		a:active div
+		{
+            color:rgb(0, 0, 0);
+            border: 2px solid rgb(0, 0, 0);
+            background:rgb(216, 216, 216);
+			box-shadow:2px 2px 3px rgb(255, 255, 255);  
+			position:relative;
+			top : 23px;
+			left :125px;
+		
+		}
+        /*for PC*/
+        div {
+            position: fixed;
+        }
+
+        div#box1 {
+            border: 5px solid black;
+            height: 400px;
+            width: 500px;
+            margin-top: 10%;
+            left: 8%;
+            position: fixed;
+            background: radial-gradient(circle at center, rgba(170, 170, 170, 0.712), rgba(0, 0, 0, 0.712));
+        }
+
+        div#box2 {
+            border: 5px solid black;
+            height: 400px;
+            width: 500px;
+            margin-top: 10%;
+            right: 8%;
+            position: fixed;
+            background: radial-gradient(circle at center, rgb(170, 170, 170, 0.712), rgba(0, 0, 0, 0.712));
+        }
+
+        div#box3 {
+            border: 5px solid black;
+            height: 300px;
+            width: 300px;
+            margin-top: 13%;
+            right: 14%;
+            border-radius: 50%;
+            position: fixed;
+            background-color: black;
+            cursor: pointer;
+        }
+
+        div#box4 {
+            border: 5px solid black;
+            height: 300px;
+            width: 300px;
+            margin-top: 13%;
+            left: 14%;
+            border-radius: 50%;
+            position: fixed;
+            background-color: black;
+            cursor: pointer;
+        }
+
+        div#laundry {
+            margin: -10px 0% 0% 0%;
+            height: 150px;
+            width: 100%;
+            opacity: 0.7;
+            font-size: 8em;
+            text-align: center;
+        }
+
+        div#laundry2 {
+            background-color: black;
+            margin: 25px 0% 0% -0.5%;
+            height: 100px;
+            width: 100%;
+            opacity: 0.9;
+            font-size: 8em;
+            text-align: center;
+        }
+
+        div#drycolor {
+            margin: 0% 0% 0% 0%;
+            height: 150px;
+            width: 100%;
+            opacity: 0.9;
+            font-size: 8em;
+            text-align: left;
+
+        }
+
+        div#washcolor {
+            margin: 0% 0px 10px 0%;
+            height: 150px;
+            width: 100%;
+            opacity: 0.9;
+            font-size: 8em;
+            text-align: right;
+
+        }
+        #reservation{
+            width:270px; 
+            height: 400.85px;
+            position: fixed;
+            top:161.5px;
+            left:628px;
+            text-align: center;
+            color :white;
+            border: 5px solid black;
+            background-color: rgba(151, 133, 94, 0.726);
+            
+        }
+    </style>
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script>
+        var h1,m1,h2,m2;
+        var WOD;
+        var val;
+        var id;
+        var record;
+        var time;
+        var t,end;
+        function dry() {
+           WOD=1;
+            $.ajax({
+                url: "WOD.php",
+                data: {
+                    
+                },
+                type: "POST",
+                datatype: "html",
+                    success: function( output ) {
+                        $("#box3").attr('onclick','').unbind('click');
+                        $("#box4").attr('onclick','').unbind('click');//取消可點擊
+                        $("#box3").css('cursor','unset');
+                        $("#box4").css('cursor','unset');
+                        record = -1;
+                        var result = output.split('/');
+                        var valid=result[0].split(',');
+                        id=result[1].split(',');
+                        var wod=result[2].split(',');
+                        end=result[3].split(',');
+                        var b4="<p style='text-align: center;color: rgb(219, 110, 110);opacity: 1;margin-top: 20%;font-family: NSimSun; font-size:10ex'>Now:<br>";
+                        var br="<h1>已預訂:<br>";
+                        var count = 0;
+                        for(var i=0;i<valid.length;i++)
+                        {
+                            if(wod[i]==1)
+                            {
+                                if(valid[i]==0)
+                                {
+                                    br+=id[i]+"<br>";
+                                    count=count+1;
+                                }
+                                else
+                                {
+                                    b4+=id[i]+"<br>";
+                                    record=i;
+                                }
+                            }
+                        }
+                        document.getElementById("box1").innerHTML="<h1 style='text-align: center;color: rgb(219, 110, 110);opacity: 1;margin-top: 70%;font-family: NSimSun; font-size:40px'>End time:"+end[record];
+                        b4+="</p>"
+                        br+="</h1>"
+                        if(record==-1)
+                            {
+                                b4="<h1 style='text-align: center;color: rgb(219, 110, 110);opacity: 1;margin-top: 30%;font-family: NSimSun; font-size:60px'>可使用</h1>";
+                                document.getElementById("box1").innerHTML=null;
+                            }
+                            
+                        if(count==0)
+                            br="<h1>無預訂</h1>";
+                        document.getElementById("reservation").innerHTML=br;
+                        document.getElementById("box4").innerHTML=b4;
+                        $("#reservation").css('overflow','auto');
+                        time= new Date();
+                        var hour1=0;
+                        var min1=0;
+                        var hour2=0;
+                        var min2=0;
+                        h1="";
+                        m1="";
+                        h2="";
+                        m2="";
+                        if(record==-1){//empty
+                            hour1=time.getHours();
+                            min1=time.getMinutes();
+                        }
+                        else{//somebody
+                            t=end[record].split(':');
+                            t[0]=parseInt(t[0]);
+                            t[1]=parseInt(t[1]);
+                            hour1=t[0]
+                            min1=t[1]+count*40;
+                        }
+                        for(var t=0;min1>=60;t++){
+                            min1-=60;
+                            hour1++;
+                        }
+                        if(hour1>=24){
+                            hour1-=24;
+                        }
+                        //結束時間計算
+                        hour2=hour1;
+                        min2=min1+40;
+                        for(var i=0;min2>=60;i++){
+                            min2-=60;
+                            hour2++;
+                        }
+                        if(hour2>=24){
+                            hour2-=24;
+                        }
+                        //開始時間顯示
+                        if(hour1/10<1){
+                            h1="0"+hour1;
+                        }
+                        else{
+                            h1=hour1;
+                        }
+                        if(min1/10<1){
+                            m1="0"+min1;
+                        }
+                        else{
+                            m1=min1;
+                        }
+                        //結束時間顯示
+                        if(hour2/10<1){
+                            h2="0"+hour2;
+                        }
+                        else{
+                            h2=hour2;
+                        }
+                        if(min2/10<1){
+                            m2="0"+min2;
+                        }
+                        else{
+                            m2=min2;
+                        }
+                        $("#box2").css('z-index','1');
+                        var b2="<form method='POST'>";
+                        b2+="<p style='text-align: center;color: white;opacity: 1;font-size:5ex'>你的大概開始時間"+h1+":"+m1+"<br><br>"+"你的大概結束時間"+h2+":"+m2+"</p>";
+                        b2+="<p style='text-align: center;color: white;opacity: 1;font-size:3ex'>請輸入房號、床位<br><input name = 'name' type = 'text' size = '10' id='name' maxlength='4' placeholder='ex:205A' pattern='[1-7]{1}[0-3]{1}[0-9]{1}[A-D]{1}' required >";
+                        b2+="<button type='submit' value='Submit' onclick='input()'>送出</button></p></form>";
+                        b2+="<a><div style='cursor:pointer; margin-left: 11.7%;margin-top: 20px' onclick='update()'>取出</div></a>";
+                        document.getElementById("box2").innerHTML=b2;
+                        document.getElementById("box3").innerHTML=null;
+                        $("#box3").css('background-color','rgba(0,0,0,0)');
+                        $("#box3").css('border','none');
+                    },
+                error : function(){
+                    alert( "Request failed." );
+		        }
+	        });
+        }
+        function wash() {
+            WOD=0;
+            $.ajax({
+                url: "WOD.php",
+                data: {
+            
+                },
+                type: "POST",
+                datatype: "html",
+                    success: function( output ) {
+                        $("#box4").attr('onclick','').unbind('click');
+                        $("#box3").attr('onclick','').unbind('click');//取消可點擊
+                        $("#box4").css('cursor','unset');
+                        $("#box3").css('cursor','unset');
+                        record = -1;
+                        var result = output.split('/');
+                        var valid=result[0].split(',');
+                        id=result[1].split(',');
+                        var wod=result[2].split(',');
+                        end=result[3].split(',');
+                        var b3="<p style='text-align: center;color: rgb(50, 122,205);opacity: 1;margin-top: 20%;font-family: NSimSun; font-size:10ex'>Now:<br>";
+                        var br="<h1>已預訂:<br>";
+                        var count = 0;
+                        for(var i=0;i<valid.length;i++)
+                        {
+                            if(wod[i]==0)
+                            {
+                                if(valid[i]==0)
+                                {
+                                    br+=id[i]+"<br>";
+                                    count=count+1;
+                                }
+                                else
+                                {
+                                    b3+=id[i]+"<br>";
+                                    record=i;
+                                }
+                            }
+                        }
+                        document.getElementById("box2").innerHTML="<h1 style='text-align: center;color: rgb(50, 122,205);opacity: 1;margin-top: 70%;font-family: NSimSun; font-size:40px'>End time:"+end[record];
+                        b3+="</p>"
+                        br+="</h1>"
+                        if(record==-1)
+                            {
+                                b3="<h1 style='text-align: center;color: rgb(50, 122,205);opacity: 1;margin-top: 30%;font-family: NSimSun; font-size:60px'>可使用</h1>";
+                                document.getElementById("box2").innerHTML=null;
+                            }
+                        if(br=="<h1>已預訂:<br><br></h1>")
+                            br="<h1>無預訂</h1>";
+                        document.getElementById("reservation").innerHTML=br;
+                        document.getElementById("box3").innerHTML=b3;
+                        $("#reservation").css('overflow','auto');
+                        time= new Date();
+                        var hour1=0;
+                        var min1=0;
+                        var hour2=0;
+                        var min2=0;
+                        h1="";
+                        m1="";
+                        h2="";
+                        m2="";
+                        if(record==-1){//empty
+                            hour1=time.getHours();
+                            min1=time.getMinutes();
+                        }
+                        else{//somebody
+                            t=end[record].split(':');
+                            t[0]=parseInt(t[0]);
+                            t[1]=parseInt(t[1]);
+                            hour1=t[0]
+                            min1=t[1]+count*40;
+                        }
+                        for(var t=0;min1>=60;t++){
+                            min1-=60;
+                            hour1++;
+                        }
+                        if(hour1>=24){
+                            hour1-=24;
+                        }
+                        //結束時間計算
+                        hour2=hour1;
+                        min2=min1+40;
+                        for(var i=0;min2>=60;i++){
+                            min2-=60;
+                            hour2++;
+                        }
+                        if(hour2>=24){
+                            hour2-=24;
+                        }
+                        //開始時間顯示
+                        if(hour1/10<1){
+                            h1="0"+hour1;
+                        }
+                        else{
+                            h1=hour1;
+                        }
+                        if(min1/10<1){
+                            m1="0"+min1;
+                        }
+                        else{
+                            m1=min1;
+                        }
+                        //結束時間顯示
+                        if(hour2/10<1){
+                            h2="0"+hour2;
+                        }
+                        else{
+                            h2=hour2;
+                        }
+                        if(min2/10<1){
+                            m2="0"+min2;
+                        }
+                        else{
+                            m2=min2;
+                        }
+                        $("#box1").css('z-index','1');
+                        var b1="<form method='POST'>";
+                        b1+="<p style='text-align: center;color: white;opacity: 1;font-size:5ex'>你的大概開始時間"+h1+":"+m1+"<br><br>"+"你的大概結束時間"+h2+":"+m2+"</p>";
+                        b1+="<p style='text-align: center;color: white;opacity: 1;font-size:3ex'>請輸入房號、床位<br><input name = 'name' type = 'text' size = '10' id='name' maxlength='4' placeholder='ex:205A' pattern='[1-7]{1}[0-3]{1}[0-9]{1}[A-D]{1}' required >";
+                        b1+="<button type='submit' value='Submit' onclick='input()'>送出</button></p></form>";
+                        b1+="<a><div style='cursor:pointer; margin-left: 11.7%;margin-top: 20px' onclick='update()'>取出</div></a>";
+                        document.getElementById("box1").innerHTML=b1;
+                        document.getElementById("box4").innerHTML=null;
+                        $("#box4").css('background-color','rgba(0,0,0,0)');
+                        $("#box4").css('border','none');
+                    },
+                error : function(){
+                    alert( "Request failed." );
+		        }
+	        });
+        }
+        function input(){
+            val=$("#name").val();
+            $.ajax({
+                url: "input.php",
+                data: {
+                    id : val,
+                    hbeg : h1,
+                    mbeg : m1,
+                    hend : h2,
+                    mend : m2,
+                    WOD : WOD
+                    },
+                type: "POST",
+                datatype: "html",
+                    success: function( output ) {
+                        alert(output);
+                        window.location.href = window.location.href;
+                    },
+                error : function(){
+                    alert( "Request failed." );
+                }
+            });
+        }
+        function update(){
+            var t=end[record].split(':');
+            $.ajax({
+                url: "update.php",
+                data: {
+                    id : id[record],
+                    hnow : time.getHours(),
+                    mnow : time.getMinutes(),
+                    hend : t[0],
+                    mend : t[1],
+                    WOD : WOD
+                    },
+                type: "POST",
+                datatype: "html",
+                    success: function( output ) {
+                        alert(output);
+                        window.location.href = window.location.href;
+                    },
+                error : function(){
+                    alert( "Request failed." );
+                }
+            });
+        }
+    </script>
+</head>
+
+<body background="laundry1.jpg">
+    <div id="box1"></div>
+    <div id="box2"></div>
+    <div id="box3" onclick="wash()">
+        <h2 style='text-align: center; color:rgb(50, 122,205);opacity: 1;margin-top: 20%;font-family: NSimSun'>洗
+            <p style = "font-size:30px;margin-top: -5%">Reservation</p>
+        </h2>
+    </div>
+    <div id="box4" onclick="dry()">
+        <h2 style='text-align: center;color: rgb(219, 110, 110);opacity: 1;margin-top: 20%;font-family: NSimSun'>烘
+            <p style = "font-size:30px;margin-top: -5%">Reservation</p>
+        </h2>
+    </div>
+    <div id="laundry"></div>
+    <div id="laundry2"></div>
+    <div id="drycolor" style='color: rgb(219, 110, 110) '>DRY</div>
+    <div id="h1" style='text-align: center;font-size: 4.5em;margin:1.5%0%0%27%;color: whitesmoke;'>
+        黃元智大學洗烘衣系統
+    </div>
+    <div id="washcolor" style='color:rgb(50, 122,205)'>WASH</div>
+    <img width="100%" height="100%" style="margin:-10%0%0%0%">
+    <div id ="reservation">
+        <h4>-洗烘衣系統與哲學之道的交互了解-</h4>
+        <p>        我們都知道，只要有意義，那麼就必須慎重考慮。老舊的想法已經過時了。
+            洗烘衣系統的出現，重寫了人生的意義。話雖如此，問題的核心究竟是什麼？
+            洗烘衣系統的出現，必將帶領人類走向更高的巔峰。現在，正視洗烘衣系統的問題，是非常非常重要的。
+            因為，不要先入為主覺得洗烘衣系統很複雜，實際上，洗烘衣系統可能比你想的還要更複雜。我認為，劉向講過一句值得人反覆尋思的話，天將與之，必先苦之; 
+            天將毀之，必先累之。這段話的餘韻不斷在我腦海中迴盪著。其實，若思緒夠清晰，那麼洗烘衣系統也就不那麼複雜了。</p>
+    </div>
+    <div>
+        <a href="javascript:window.location.href = window.location.href">
+            <img src = "haunghead1.png" style = "position:fixed; top:6%; left:18%; cursor:pointer;">
+        </a>
+        
+    </div>
+    
+    
+</body>
+
+</html>
